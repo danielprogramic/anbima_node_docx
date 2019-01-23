@@ -1,0 +1,101 @@
+{
+  "name": "docxtemplater",
+  "version": "3.9.6",
+  "author": "Edgar Hipp",
+  "description": ".docx generator working with templates and data (like Mustache)",
+  "contributors": [
+    {
+      "name": "Edgar Hipp"
+    }
+  ],
+  "aliasify": {
+    "aliases": {
+      "xmldom": "./js/browser-versions/xmldom.js",
+      "fs": "./js/browser-versions/fs.js"
+    }
+  },
+  "main": "js/docxtemplater.js",
+  "keywords": [
+    "docx",
+    "templates",
+    "generation",
+    "microsoft word"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-xml-templating/docxtemplater"
+  },
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "cors": "2.8.4",
+    "docxtemplater": "^3.9.6",
+    "express": "4.16.2",
+    "jszip-utils": "^0.0.2",
+    "nodemon": "1.12",
+    "xmldom": "^0.1.27"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@wdio/cli": "^5.2.2",
+    "angular-expressions": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "chai": "^4.2.0",
+    "diff": "^3.5.0",
+    "envify": "^4.1.0",
+    "es6-promise": "^4.2.5",
+    "eslint": "^5.12.0",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "eslint_d": "^7.2.0",
+    "finalhandler": "^1.1.1",
+    "jszip": "2",
+    "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.15.3",
+    "rimraf": "^2.6.3",
+    "selenium-standalone": "^6.15.4",
+    "serve-static": "^1.13.2",
+    "uglify-js": "^3.4.9",
+    "webdriverio": "^5.2.2",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "generate:doc": "cd docs; rm build/ -rf ; make html",
+    "profile": "./profile.bash",
+    "preversion": "npm run test:es6 && npm run lint && npm run prettier && FAST= npm test && rimraf build && mkdirp build && npm run browserify && npm run uglify && npm run verifypublishsize && npm run test:browser",
+    "check-casing": "./check-casing.bash",
+    "compile": "npm run convertto:es5",
+    "browserify:test": "FILE=test webpack",
+    "browserify:lib": "webpack",
+    "uglify:lib": "MIN=true webpack",
+    "uglify": "npm run uglify:lib",
+    "browserify": "npm run browserify:test && npm run browserify:lib",
+    "convertto:es5": "rimraf js -rf && mkdirp js && npm run babel && cp es6/tests/*.xml js/tests ",
+    "convertto:es5:watch": "npm run babel -- --watch",
+    "test:coverage": "nyc --reporter=html --reporter=text mocha --  es6/tests/index.js",
+    "prettier": "prettier --list-different 'es6/**/!(filenames).js' '*.js'",
+    "prettier:fix": "prettier --write 'es6/**/!(filenames).js' '*.js'",
+    "lint": "eslint_d . && ./check-casing.bash",
+    "lint:fix": "eslint_d . --fix && ./check-casing.bash",
+    "test:chrome": "BROWSER=CHROME ./webdriver.bash",
+    "test:firefox": "BROWSER=FIREFOX ./webdriver.bash",
+    "test:browser": "./webdriver.bash",
+    "babel": "babel es6 --out-dir js",
+    "mocha": "mocha --full-trace --check-leaks js/tests/index.js",
+    "test:es6": "mocha --full-trace --check-leaks es6/tests/index.js",
+    "test:es6:fast": "FAST=true mocha --full-trace --check-leaks es6/tests/index.js",
+    "test": "npm run convertto:es5 && npm run mocha",
+    "test:es5": "npm test",
+    "verifypublishsize": "./verifypublishsize.bash"
+  }
+}
